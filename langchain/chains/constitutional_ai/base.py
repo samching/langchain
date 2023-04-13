@@ -83,6 +83,7 @@ class ConstitutionalChain(Chain):
 
     def _call(self, inputs: Dict[str, str]) -> Dict[str, str]:
         response = self.chain.run(**inputs)
+        initial_output = response
         input_prompt = self.chain.prompt.format(**inputs)
 
         self.callback_manager.on_text(
@@ -132,7 +133,7 @@ class ConstitutionalChain(Chain):
                 color="yellow",
             )
 
-        return {"output": response}
+        return {"output": response, "inital_output": initial_output, "critique": critique}
 
     @staticmethod
     def _parse_critique(output_string: str) -> str:
