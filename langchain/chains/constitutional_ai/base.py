@@ -104,6 +104,14 @@ class ConstitutionalChain(Chain):
                 output_string=raw_critique,
             ).strip()
 
+            ## if the critique contains "No critique needed", then we're done
+            if "no critique needed" in critique.lower():
+                return {
+                    "output": response,
+                    "inital_output": initial_output,  # in this case, initial output is the same response, but we'll keep it for consistency
+                    "critique": critique,
+                }
+
             # Do revision
 
             revision = self.revision_chain.run(
@@ -133,7 +141,11 @@ class ConstitutionalChain(Chain):
                 color="yellow",
             )
 
-        return {"output": response, "inital_output": initial_output, "critique": critique}
+        return {
+            "output": response,
+            "inital_output": initial_output,
+            "critique": critique,
+        }
 
     @staticmethod
     def _parse_critique(output_string: str) -> str:
